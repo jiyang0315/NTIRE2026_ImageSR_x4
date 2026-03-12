@@ -43,7 +43,11 @@ def run(model_func, model_name, model_path, device, args, mode="test"):
         data_path = args.test_dir
     assert data_path is not None, "Please specify the dataset path for validation or test."
     
-    save_path = os.path.join(args.save_dir, model_name, mode)
+    if args.model_id == 6:
+        # For team06_AIT, write outputs directly under save_dir.
+        save_path = args.save_dir
+    else:
+        save_path = os.path.join(args.save_dir, model_name, mode)
     util.mkdir(save_path)
 
     start = torch.cuda.Event(enable_timing=True)
@@ -79,7 +83,6 @@ def main(args):
     # load model
     # --------------------------------
     model_func, model_path, model_name = select_model(args, device)
-    logger.info(model_name)
 
     # if model not in results:
     if args.valid_dir is not None:

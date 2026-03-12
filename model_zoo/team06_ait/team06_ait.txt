@@ -7,8 +7,8 @@ Expected usage:
 
 Minimal recommended `team06_ait.json`:
 {
-  "inference_root": "/home/jiyang/jiyang/Projects/inference_only",
-  "pretrained_model_path": "/home/jiyang/jiyang/Projects/SeeSR/preset/models/stable-diffusion-2-base",
+  "inference_root": "models/team06_AIT/ait_backend",
+  "pretrained_model_path": "/home/jiyang/jiyang/Projects/NTIRE2026_ImageSR_x4/model_zoo/team06_ait/stable-diffusion-2-base",
   "seesr_model_path": "/home/jiyang/jiyang/Projects/SeeSR/experience/seesr_noise_deg_token_dynamic/checkpoint-30000",
   "use_degradation_token": true,
   "use_dynamic_degradation_token": true
@@ -22,3 +22,10 @@ You can also override values by environment variables:
 - SEESR_USE_DEGRADATION_TOKEN
 - SEESR_DEGRADATION_ADAPTER_PATH
 - SEESR_USE_DYNAMIC_DEGRADATION_TOKEN
+
+Folder naming tip:
+- You can rename the backend folder freely (e.g., `models/team06_AIT/my_backend`),
+  then set `"inference_root": "models/team06_AIT/my_backend"` in `team06_ait.json`.
+
+Current default:
+- `"inference_root": "models/team06_AIT/ait_backend"`

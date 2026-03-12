@@ -1,2 +1,2 @@
-from .io import main
+from .model import main
 

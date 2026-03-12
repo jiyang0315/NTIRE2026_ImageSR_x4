@@ -121,8 +121,8 @@ def load_seesr_pipeline(args, accelerator, enable_xformers_memory_efficient_atte
     return validation_pipeline
 
 def load_tag_model(args, device='cuda'):
-    
-    model = ram(pretrained='present/models/ram_swin_large_14m.pth',
+    pretrained_path = args.ram_pretrained_path or 'present/models/ram_swin_large_14m.pth'
+    model = ram(pretrained=pretrained_path,
                 pretrained_condition=args.ram_ft_path,
                 image_size=384,
                 vit='swin_l')
@@ -188,9 +188,6 @@ def get_validation_prompt(args, image, model, degradation_token_adapter=None, de
     return validation_prompt, ram_encoder_hidden_states, degradation_features
 
 def main(args, enable_xformers_memory_efficient_attention=True,):
-    txt_path = os.path.join(args.output_dir, 'txt')
-    os.makedirs(txt_path, exist_ok=True)
-
     accelerator = Accelerator(
         mixed_precision=args.mixed_precision,
     )
@@ -241,10 +238,10 @@ def main(args, enable_xformers_memory_efficient_attention=True,):
             negative_prompt = args.negative_prompt #dirty, messy, low quality, frames, deformed, 
             
             if args.save_prompts:
-                txt_save_path = f"{txt_path}/{os.path.basename(image_name).split('.')[0]}.txt"
-                file = open(txt_save_path, "w")
-                file.write(validation_prompt)
-                file.close()
+                name_for_prompt, _ = os.path.splitext(os.path.basename(image_name))
+                txt_save_path = os.path.join(args.output_dir, f"{name_for_prompt}.txt")
+                with open(txt_save_path, "w", encoding="utf-8") as file:
+                    file.write(validation_prompt)
             print(f'{validation_prompt}')
 
             ori_width, ori_height = validation_image.size
@@ -263,9 +260,6 @@ def main(args, enable_xformers_memory_efficient_attention=True,):
             resize_flag = True #
 
             print(f'input size: {height}x{width}')
-
-            for sample_idx in range(args.sample_times):
-                os.makedirs(f'{args.output_dir}/sample{str(sample_idx).zfill(2)}/', exist_ok=True)
 
             for sample_idx in range(args.sample_times):  
                 with torch.autocast("cuda"):
@@ -292,13 +286,17 @@ def main(args, enable_xformers_memory_efficient_attention=True,):
                     image = image.resize((ori_width*rscale, ori_height*rscale))
                     
                 name, ext = os.path.splitext(os.path.basename(image_name))
-                
-                image.save(f'{args.output_dir}/sample{str(sample_idx).zfill(2)}/{name}.png')
+                if args.sample_times > 1:
+                    out_name = f"{name}_s{sample_idx:02d}.png"
+                else:
+                    out_name = f"{name}.png"
+                image.save(os.path.join(args.output_dir, out_name))
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--seesr_model_path", type=str, default=None)
     parser.add_argument("--ram_ft_path", type=str, default=None)
+    parser.add_argument("--ram_pretrained_path", type=str, default=None)
     parser.add_argument("--pretrained_model_path", type=str, default=None)
     parser.add_argument("--prompt", type=str, default="") # user can add self-prompt to improve the results
     parser.add_argument("--added_prompt", type=str, default="clean, high-resolution, 8k")
