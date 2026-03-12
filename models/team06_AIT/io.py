@@ -6,6 +6,10 @@ import sys
 from argparse import Namespace
 
 
+def _repo_root():
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+
+
 def _str2bool(value):
     if isinstance(value, bool):
         return value
@@ -23,9 +27,19 @@ def _load_config(model_dir):
 
 
 def _resolve_inference_root(model_dir, cfg):
+    repo_root = _repo_root()
+    cfg_inference_root = cfg.get("inference_root")
+    cfg_candidates = []
+    if cfg_inference_root:
+        cfg_candidates = [
+            cfg_inference_root,
+            os.path.join(model_dir, cfg_inference_root),
+            os.path.join(repo_root, cfg_inference_root),
+        ]
     candidates = [
         os.environ.get("SEESR_INFER_ROOT"),
-        cfg.get("inference_root"),
+        *cfg_candidates,
+        os.path.join(repo_root, "inference_only"),
         os.path.join(model_dir, "inference_only"),
         "/home/jiyang/jiyang/Projects/inference_only",
     ]
@@ -52,6 +66,7 @@ def main(model_dir, input_path, output_path, device):
       main(model_dir, input_path, output_path, device)
     """
     cfg = _load_config(model_dir)
+    repo_root = _repo_root()
     inference_root = _resolve_inference_root(model_dir, cfg)
 
     if inference_root not in sys.path:
@@ -67,12 +82,16 @@ def main(model_dir, input_path, output_path, device):
         "pretrained_model_path",
         os.path.join(model_dir, "stable-diffusion-2-base"),
     )
+    if pretrained_model_path and not os.path.isabs(pretrained_model_path):
+        pretrained_model_path = os.path.join(repo_root, pretrained_model_path)
     seesr_model_path = _env_or_cfg(
         "SEESR_MODEL_PATH",
         cfg,
         "seesr_model_path",
         model_dir,
     )
+    if seesr_model_path and not os.path.isabs(seesr_model_path):
+        seesr_model_path = os.path.join(repo_root, seesr_model_path)
     ram_ft_path = _env_or_cfg("SEESR_RAM_FT_PATH", cfg, "ram_ft_path", None)
 
     adapter_path = _env_or_cfg(
@@ -174,7 +193,14 @@ def main(model_dir, input_path, output_path, device):
         ),
     )
 
-    seesr_main(args)
+    old_cwd = os.getcwd()
+    try:
+        # Some SeeSR internal paths are relative (e.g., "present/models/...").
+        # Run from inference_root to keep original path assumptions valid.
+        os.chdir(inference_root)
+        seesr_main(args)
+    finally:
+        os.chdir(old_cwd)
 
     sample0 = os.path.join(tmp_output, "sample00")
     if os.path.isdir(sample0):

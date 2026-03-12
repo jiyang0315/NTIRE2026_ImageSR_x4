@@ -1,5 +1,5 @@
 {
-  "inference_root": "/home/jiyang/jiyang/Projects/inference_only",
+  "inference_root": "inference_only",
   "pretrained_model_path": "/home/jiyang/jiyang/Projects/SeeSR/preset/models/stable-diffusion-2-base",
   "seesr_model_path": "/home/jiyang/jiyang/Projects/SeeSR/experience/seesr_noise_deg_token_dynamic/checkpoint-30000",
   "use_degradation_token": true,
