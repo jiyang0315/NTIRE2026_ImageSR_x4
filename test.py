@@ -25,7 +25,7 @@ def select_model(args, device):
         # AIT (SeeSR-based)
         from models.team06_AIT import main as AIT
         name = f"{model_id:02}_AIT"
-        model_path = os.path.join("model_zoo", "team06_ait")
+        model_path = os.path.join("model_zoo", "team06_AIT")
         model_func = AIT
     else:
         raise NotImplementedError(f"Model {model_id} is not implemented.")

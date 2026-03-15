@@ -1,8 +1,0 @@
-{
-  "inference_root": "models/team06_AIT/ait_backend",
-  "pretrained_model_path": "/home/jiyang/jiyang/Projects/NTIRE2026_ImageSR_x4/model_zoo/team06_ait/stable-diffusion-2-base",
-  "seesr_model_path": "/home/jiyang/jiyang/Projects/SeeSR/experience/seesr_noise_deg_token_dynamic/checkpoint-30000",
-  "ram_pretrained_path": "/home/jiyang/jiyang/Projects/NTIRE2026_ImageSR_x4/model_zoo/team06_ait/ram_swin_large_14m.pth",
-  "use_degradation_token": true,
-  "use_dynamic_degradation_token": true
-}

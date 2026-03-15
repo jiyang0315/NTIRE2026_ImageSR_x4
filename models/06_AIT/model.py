@@ -20,7 +20,7 @@ def _str2bool(value):
 
 def _load_config(model_dir):
     candidates = [
-        os.path.join(os.path.dirname(__file__), "team06_ait_model.json"),
+        os.path.join(os.path.dirname(__file__), "06_ait_model.json"),
         os.path.join(model_dir, "team06_ait.json"),
     ]
     for cfg_path in candidates:
@@ -44,9 +44,9 @@ def _resolve_inference_root(model_dir, cfg):
         os.environ.get("SEESR_INFER_ROOT"),
         *cfg_candidates,
         os.path.join(model_dir, "ait_backend"),
-        os.path.join(repo_root, "models/team06_AIT/ait_backend"),
         os.path.join(repo_root, "inference_only"),
         os.path.join(model_dir, "inference_only"),
+        "/home/jiyang/jiyang/Projects/inference_only",
     ]
     for path in candidates:
         if path and os.path.isfile(os.path.join(path, "test_seesr.py")):
@@ -93,7 +93,7 @@ def _resolve_ram_pretrained_path(model_dir, cfg, inference_root, repo_root):
             os.path.join(inference_root, "present/models/ram_swin_large_14m.pth"),
             os.path.join(repo_root, "present/models/ram_swin_large_14m.pth"),
             os.path.join(model_dir, "ram_swin_large_14m.pth"),
-            os.path.join(repo_root, "model_zoo/team06_AIT/ram_swin_large_14m.pth"),
+            os.path.join(repo_root, "model_zoo/team06_ait/ram_swin_large_14m.pth"),
         ]
     )
 
@@ -103,7 +103,7 @@ def _resolve_ram_pretrained_path(model_dir, cfg, inference_root, repo_root):
 
     raise FileNotFoundError(
         "Cannot find RAM pretrained weight 'ram_swin_large_14m.pth'. "
-        "Please set SEESR_RAM_PRETRAINED_PATH or add 'ram_pretrained_path' in team06_ait_model.json."
+        "Please set SEESR_RAM_PRETRAINED_PATH or add 'ram_pretrained_path' in 06_ait_model.json."
     )
 
 
