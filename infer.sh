@@ -1,1 +1,1 @@
-CUDA_VISIBLE_DEVICES=1 python test.py --test_dir /home/jiyang/jiyang/Projects/SeeSR/preset/datasets/test_datasets/DIV2K/LR --save_dir ./output/test_2 --model_id 6
+CUDA_VISIBLE_DEVICES=1 python test.py --test_dir /home/jiyang/jiyang/Projects/SeeSR/preset/datasets/contest/test_data_contest --save_dir ./output/test_4 --model_id 6

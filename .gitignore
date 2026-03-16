@@ -1,3 +1,5 @@
 inference_only/present/models
 output
-model_zoo/team06_AIT
+model_zoo/team06_AIT/ablation_dt_only_static_s42_30000
+model_zoo/team06_AIT/stable-diffusion-2-base
+model_zoo/team06_AIT/ram_swin_large_14m.pth

@@ -1,1 +1,0 @@
-CUDA_VISIBLE_DEVICES=0 python test.py --test_dir /home/jiyang/jiyang/Projects/SeeSR/preset/datasets/test_datasets/DIV2K/LR --save_dir ./output/test --model_id 6
